@@ -21,6 +21,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "搜索时跳过Level"))
 	bool bNoSearchLevelAsset = true;
 
+	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "检查内存引用"))
+	bool bCheckMemoryReference = true;
+
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "最多显示资产数量(防止卡顿)"))
 	int32 MaxDisplayAssetNum = 1000;
 

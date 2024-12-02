@@ -10,7 +10,8 @@ struct FReferenceInfo : public TSharedFromThis<FReferenceInfo>
 {
 public:
 	int32 DependenciesNum;
-	int32 ReferencersNum;
+	int32 ReferencersNum;		// 资产引用	
+	int32 MemoryReference;		// 内存引用	比如 ini 中
 	const FAssetData AssetData;
 
 	FReferenceInfo(const FAssetData& InAssetData, const int32& InDependenciesNum, const int32& ReferencersNum) 

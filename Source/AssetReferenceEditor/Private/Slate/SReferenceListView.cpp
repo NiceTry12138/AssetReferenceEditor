@@ -7,8 +7,10 @@
 #include "ContentBrowserModule.h"
 #include "IContentBrowserSingleton.h"
 #include "Config/AssetReferenceDeleteSettings.h"
+#include "ObjectTools.h"
 
 const FName ReferenceNumName(TEXT("被引用数量"));
+const FName ReferenceMemoryNumName(TEXT("被内存引用数量"));
 const FName DependencyNumName(TEXT("依赖资产数量"));
 const FName AssetPathName(TEXT("资产路径"));
 const FName AssetName(TEXT("资产名称"));
@@ -37,6 +39,10 @@ TSharedRef<SWidget> SAssetReferenceItemListViewRow::GenerateWidgetForColumn(cons
 	else if (ColumnName.IsEqual(DependencyNumName))
 	{
 		return SNew(STextBlock).Text(FText::FromString(FString::FromInt(ElementInfo->DependenciesNum)));
+	}
+	else if (ColumnName.IsEqual(ReferenceMemoryNumName))
+	{
+		return SNew(STextBlock).Text(FText::FromString(FString::FromInt(ElementInfo->MemoryReference)));
 	}
 	else if (ColumnName.IsEqual(AssetOpBtns))
 	{
@@ -82,6 +88,10 @@ void SReferenceListView::Construct(const FArguments& InArgs)
 			.DefaultLabel(FText::FromName(AssetPathName))
 			.HAlignCell(EHorizontalAlignment::HAlign_Left)
 
+			+ SHeaderRow::Column(ReferenceMemoryNumName)
+			.DefaultLabel(FText::FromName(ReferenceMemoryNumName))
+			.HAlignCell(EHorizontalAlignment::HAlign_Left)
+
 			+ SHeaderRow::Column(ReferenceNumName)
 			.HAlignCell(EHorizontalAlignment::HAlign_Left)
 			[
@@ -120,8 +130,17 @@ void SReferenceListView::Refresh()
 	auto Setting = UAssetReferenceDeleteSettings::GetSettings();
 
 	auto AllAssets = GetAllAssets();
+
+	FScopedSlowTask SlowTask(AllAssets.Num() + 2, FText::FromString(TEXT("刷新资产列表")));
+	SlowTask.MakeDialog();
+
+	SlowTask.EnterProgressFrame(1, FText::FromString(TEXT("获取所有资产")));
+
 	for (const auto& AssetData : AllAssets)
 	{
+		FString LogContent = FString::Format(TEXT("检查 -> {0}"), { *AssetData.PackageName.ToString() });
+		SlowTask.EnterProgressFrame(1, FText::FromString(LogContent));
+
 		if (Setting->bNoSearchLevelAsset && IsLevelAsset(AssetData))
 		{
 			continue;
@@ -140,7 +159,20 @@ void SReferenceListView::Refresh()
 			continue;
 		}
 
+		int32 MemoryReferenceNum = 0;
+		if (Setting->bCheckMemoryReference)
+		{
+			bool bIsReferencedInMemoryByNonUndo;
+			bool bIsReferencedInMemoryByUndo;
+			FReferencerInformationList ReferencerInformationList;
+			UObject* AssetObject = AssetData.GetAsset();
+			ObjectTools::GatherObjectReferencersForDeletion(AssetObject, bIsReferencedInMemoryByNonUndo, bIsReferencedInMemoryByUndo, &ReferencerInformationList);
+
+			MemoryReferenceNum = ReferencerInformationList.ExternalReferences.Num() + ReferencerInformationList.InternalReferences.Num();
+		}
+
 		TSharedRef<FReferenceInfo> RowData = MakeShared<FReferenceInfo>(AssetData, DependencyNames.Num(), ReferencerNames.Num());
+		RowData->MemoryReference = MemoryReferenceNum;
 		AllAssetReferenceInfos.Add(RowData);
 
 		if (AllAssetReferenceInfos.Num() > Setting->MaxDisplayAssetNum)
@@ -148,6 +180,11 @@ void SReferenceListView::Refresh()
 			break;
 		}
 	}
+
+	UE_LOG(LogTemp, Log, TEXT("%d"), AllAssetReferenceInfos.Num());
+	SlowTask.EnterProgressFrame(1, FText::FromString(TEXT("刷新 ListView")));
+
+	RequestListRefresh();
 }
 
 TSharedRef<ITableRow> SReferenceListView::OnGenerateRowListView(FReferenceInfoPtr ItemInfo, const TSharedRef<STableViewBase>& InOwnerTable)
@@ -166,7 +203,7 @@ FReply SReferenceListView::OnChangeSortType(EAssetListViewSortType InSortType)
 
 void SReferenceListView::Init()
 {
-	Refresh();
+	//Refresh();
 }
 
 void SReferenceListView::FilterAssets(TArray<FName>& Assets)

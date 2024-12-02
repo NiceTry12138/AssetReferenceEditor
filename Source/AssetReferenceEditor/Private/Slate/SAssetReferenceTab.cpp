@@ -106,7 +106,7 @@ FReply SAssetReferenceTab::DeleteButtonClicked()
 
 	for (const auto& AssetInfo : AllShowAssets)
 	{
-		if (AssetInfo->ReferencersNum > 0)
+		if ((AssetInfo->ReferencersNum + AssetInfo->MemoryReference) > 0)
 		{
 			continue;
 		}
