@@ -7,6 +7,7 @@
 #include "IStructureDetailsView.h"
 #include "Config/AssetReferenceDeleteSettings.h"
 #include "ObjectTools.h"
+#include "Misc/ScopedSlowTask.h"
 
 void SAssetReferenceTab::Construct(const FArguments& InArgs)
 {
@@ -103,6 +104,10 @@ FReply SAssetReferenceTab::DeleteButtonClicked()
 	auto AllShowAssets = ReferenceListView->GetAllAssetReferenceInfos();
 	auto Settings = UAssetReferenceDeleteSettings::GetSettings();
 
+	FScopedSlowTask SlowTask(AllShowAssets.Num() + 2, FText::FromString(TEXT("删除无引用资产")));
+	SlowTask.MakeDialog();
+
+	SlowTask.EnterProgressFrame(1, FText::FromString(TEXT("获取所有资产")));
 
 	for (const auto& AssetInfo : AllShowAssets)
 	{
@@ -111,6 +116,7 @@ FReply SAssetReferenceTab::DeleteButtonClicked()
 			continue;
 		}
 		FString DeleteAssetName = AssetInfo->AssetData.PackagePath.ToString() + TEXT("/") + AssetInfo->AssetData.AssetName.ToString();
+		SlowTask.EnterProgressFrame(1, FText::FromString(FString::Format(TEXT("删除资产 -> {0}"), { DeleteAssetName })));
 		UE_LOG(LogTemp, Log, TEXT("Delete Asset -> %s"), *DeleteAssetName);
 		TArray<FAssetData> AssetToDeletes;
 		AssetToDeletes.Add(AssetInfo->AssetData);
