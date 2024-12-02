@@ -198,6 +198,8 @@ FReply SReferenceListView::OnChangeSortType(EAssetListViewSortType InSortType)
 	 
 	SortAssetByType();
 
+	RequestListRefresh();
+
 	return FReply::Handled();
 }
 
