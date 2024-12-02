@@ -31,6 +31,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "只展示被引用数量小于该值的资产(防止卡顿)"))
 	int32 OnlyShowLessReferenceNum = 5;
 
+	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "白名单资产(不会被删除)"))
+	FString SearchStartContent = TEXT("/Game");
 
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "白名单资产(不会被删除)"))
 	TArray<FString> WhiteAssetName;

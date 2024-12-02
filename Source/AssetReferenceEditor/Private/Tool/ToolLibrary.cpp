@@ -6,6 +6,7 @@
 #include "AssetRegistry/AssetRegistryHelpers.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "AssetRegistry/IAssetRegistry.h"
+#include "Config/AssetReferenceDeleteSettings.h"
 
 TArray<FAssetData> UToolLibrary::GetAllAssetPackages()
 {
@@ -29,7 +30,7 @@ TArray<FAssetData> UToolLibrary::GetAllAssetPackages()
 
 	for (auto& AssetItem : AssetDataList)
 	{
-		bool bAdd = AssetItem.PackagePath.ToString().StartsWith(TEXT("/Game"));
+		bool bAdd = AssetItem.PackagePath.ToString().StartsWith(UAssetReferenceDeleteSettings::GetSettings()->SearchStartContent);
 		bAdd &= !AssetItem.PackagePath.ToString().StartsWith(TEXT("/Game/__ExternalActors__"));
 		bAdd &= !AssetItem.PackagePath.ToString().StartsWith(TEXT("/Game/__ExternalObjects__"));
 		if (bAdd)
