@@ -7,7 +7,9 @@ public class AssetReferenceEditor : ModuleRules
 	public AssetReferenceEditor(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-		
+
+		OptimizeCode = CodeOptimization.Never;
+
 		PublicIncludePaths.AddRange(
 			new string[] {
 				// ... add public include paths required here ...
@@ -26,6 +28,11 @@ public class AssetReferenceEditor : ModuleRules
 			new string[]
 			{
 				"Core",
+				"AssetRegistry",
+                "ContentBrowser",
+                "PropertyEditor",
+                "AssetRegistry",
+                "DeveloperSettings",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

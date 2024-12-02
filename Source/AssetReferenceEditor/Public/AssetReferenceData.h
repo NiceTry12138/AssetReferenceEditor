@@ -4,24 +4,36 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-//#include "AssetReferenceData.generated.h"
+#include "AssetReferenceData.generated.h"
 
 struct FReferenceInfo : public TSharedFromThis<FReferenceInfo>
 {
 public:
 	int32 DependenciesNum;
 	int32 ReferencersNum;
-	FString AssetPackgetPath;
-	FName AssetName;
+	const FAssetData AssetData;
 
-	FReferenceInfo():
-		DependenciesNum(0), ReferencersNum(0)
+	FReferenceInfo(const FAssetData& InAssetData, const int32& InDependenciesNum, const int32& ReferencersNum) 
+		:AssetData(InAssetData), DependenciesNum(InDependenciesNum), ReferencersNum(ReferencersNum)
 	{}
-
 };
 
 // 资产过滤
-struct FAssetFilter
+USTRUCT()
+struct FAssetDeleteConfig
 {
+	GENERATED_BODY()
 
+public:
+	UPROPERTY()
+	int32 MinDependencyNum = 0;
+
+	UPROPERTY()
+	int32 MaxDependencyNum = 0;
+
+	UPROPERTY()
+	int32 MinReferenceNum = 0;
+
+	UPROPERTY()
+	int32 MaxReferenceNum = 0;
 };

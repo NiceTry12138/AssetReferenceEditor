@@ -8,6 +8,7 @@
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Text/STextBlock.h"
 #include "ToolMenus.h"
+#include "Slate/SAssetReferenceTab.h"
 
 static const FName AssetReferenceEditorTabName("AssetReferenceEditor");
 
@@ -63,14 +64,7 @@ TSharedRef<SDockTab> FAssetReferenceEditorModule::OnSpawnPluginTab(const FSpawnT
 	return SNew(SDockTab)
 		.TabRole(ETabRole::NomadTab)
 		[
-			// Put your tab content here!
-			SNew(SBox)
-			.HAlign(HAlign_Center)
-			.VAlign(VAlign_Center)
-			[
-				SNew(STextBlock)
-				.Text(WidgetText)
-			]
+			SNew(SAssetReferenceTab)
 		];
 }
 
@@ -84,22 +78,26 @@ void FAssetReferenceEditorModule::RegisterMenus()
 	// Owner will be used for cleanup in call to UToolMenus::UnregisterOwner
 	FToolMenuOwnerScoped OwnerScoped(this);
 
-	{
-		UToolMenu* Menu = UToolMenus::Get()->ExtendMenu("LevelEditor.MainMenu.Window");
-		{
-			FToolMenuSection& Section = Menu->FindOrAddSection("WindowLayout");
-			Section.AddMenuEntryWithCommandList(FAssetReferenceEditorCommands::Get().OpenPluginWindow, PluginCommands);
-		}
-	}
+	//{
+	//	UToolMenu* Menu = UToolMenus::Get()->ExtendMenu("LevelEditor.MainMenu.Window");
+	//	{
+	//		FToolMenuSection& Section = Menu->FindOrAddSection("WindowLayout");
+	//		Section.AddMenuEntryWithCommandList(FAssetReferenceEditorCommands::Get().OpenPluginWindow, PluginCommands);
+	//	}
+	//}
 
+	UToolMenu* ToolbarMenu = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.PlayToolBar");
 	{
-		UToolMenu* ToolbarMenu = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar");
+		FToolMenuSection& Section = ToolbarMenu->FindOrAddSection("PluginTools");
 		{
-			FToolMenuSection& Section = ToolbarMenu->FindOrAddSection("Settings");
-			{
-				FToolMenuEntry& Entry = Section.AddEntry(FToolMenuEntry::InitToolBarButton(FAssetReferenceEditorCommands::Get().OpenPluginWindow));
-				Entry.SetCommandList(PluginCommands);
-			}
+			FToolMenuEntry& Entry = Section.AddEntry(FToolMenuEntry::InitToolBarButton(
+				"Asset Reference",
+				FUIAction(FExecuteAction::CreateRaw(this, &FAssetReferenceEditorModule::PluginButtonClicked)),
+				TAttribute<FText>(),
+				TAttribute<FText>(),
+				FSlateIcon()
+			));
+			Entry.SetCommandList(PluginCommands);
 		}
 	}
 }
