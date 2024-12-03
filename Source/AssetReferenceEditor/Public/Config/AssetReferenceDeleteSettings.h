@@ -46,7 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "自动删除次数", Tooltip = "资产链式引用，需要频繁删除时使用", ClampMin=1))
 	int FoolDeleteTimes = 1;
 
-	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "白名单资产(不会被删除)", Tooltip="直接填入资产名字，与所填名字相同的资产都不会被删除"))
+	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "白名单资产(不会被删除)", Tooltip="直接填入资产名字，与所填名字相同的资产都不会被删除; 或者填入 /Game 开头的路径，该路径下所有资产都不会被删除"))
 	TArray<FString> WhiteAssetName;
 
 public:

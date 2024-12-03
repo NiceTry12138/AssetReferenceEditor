@@ -265,7 +265,24 @@ inline bool SReferenceListView::CheckSearchAsset(const FAssetData& AssetData)
 	bIsBP = Setting->bSkipBlueprint && bIsBP;
 
 	// 资产白名单
-	bool bWhiteAsset = Setting->WhiteAssetName.Contains(AssetData.AssetName.ToString());
+	bool bWhiteAsset = false;
+	for (const auto& WhiteName : Setting->WhiteAssetName)
+	{
+		if (WhiteName.StartsWith(TEXT("/Game")))
+		{
+			// 比路径
+			bWhiteAsset = AssetData.PackagePath.ToString().ToLower().StartsWith(WhiteName.ToLower());
+		}
+		else {
+			// 比资产名
+			bWhiteAsset = AssetData.AssetName.ToString().ToLower().Equals(WhiteName.ToLower());
+		}
+		if (bWhiteAsset)
+		{
+			break;
+		}
+	}
+
 
 	return bIsLevel || bIsDT || bIsBP || bWhiteAsset;
 }
