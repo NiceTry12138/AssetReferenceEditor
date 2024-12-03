@@ -79,7 +79,7 @@ protected:
 
 	void SortAssetByType();
 
-	inline bool IsLevelAsset(const FAssetData& AssetData);
+	inline bool CheckSearchAsset(const FAssetData& AssetData);
 
 	// Get All /Game 中的资产
 	TArray<FAssetData> GetAllAssets();

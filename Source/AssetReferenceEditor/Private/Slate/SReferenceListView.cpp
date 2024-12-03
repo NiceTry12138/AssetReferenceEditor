@@ -141,7 +141,7 @@ void SReferenceListView::Refresh()
 		FString LogContent = FString::Format(TEXT("检查 -> {0}"), { *AssetData.PackageName.ToString() });
 		SlowTask.EnterProgressFrame(1, FText::FromString(LogContent));
 
-		if (Setting->bNoSearchLevelAsset && IsLevelAsset(AssetData))
+		if (CheckSearchAsset(AssetData))
 		{
 			continue;
 		}
@@ -246,11 +246,24 @@ void SReferenceListView::SortAssetByType()
 	});
 }
 
-inline bool SReferenceListView::IsLevelAsset(const FAssetData& AssetData)
+inline bool SReferenceListView::CheckSearchAsset(const FAssetData& AssetData)
 {
+	auto Setting = UAssetReferenceDeleteSettings::GetSettings();
+
 	auto CheckAssetName = AssetData.AssetClassPath.GetAssetName().ToString();
-	return AssetData.AssetClassPath.GetAssetName().ToString().Equals(TEXT("World"));
-	//return false;
+	bool bIsLevel = AssetData.AssetClassPath.GetAssetName().ToString().Equals(TEXT("World"));
+	// 当前是 Level，当前不允许检查 Level
+	bIsLevel = Setting->bNoSearchLevelAsset && bIsLevel;
+
+	// 不检查 DataTable
+	bool bIsDT = AssetData.AssetClassPath.GetAssetName().ToString().Equals(TEXT("DataTable"));
+	bIsDT = Setting->bSkipDataTable && bIsDT;
+
+	// 不检查 Blueprint
+	bool bIsBP = AssetData.AssetClassPath.GetAssetName().ToString().Equals(TEXT("Blueprint"));
+	bIsBP = Setting->bSkipBlueprint && bIsBP;
+
+	return bIsLevel || bIsDT || bIsBP;
 }
 
 TArray<FAssetData> SReferenceListView::GetAllAssets()

@@ -21,6 +21,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "搜索时跳过Level"))
 	bool bNoSearchLevelAsset = true;
 
+	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "检索时跳过DT"))
+	bool bSkipDataTable = true;
+
+	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "检索时跳过蓝图"))
+	bool bSkipBlueprint = true;
+
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "检查内存引用"))
 	bool bCheckMemoryReference = true;
 
