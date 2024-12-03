@@ -31,13 +31,13 @@ public:
 	bool bCheckMemoryReference = true;
 
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "最多显示资产数量(防止卡顿)"))
-	int32 MaxDisplayAssetNum = 1000;
+	int32 MaxDisplayAssetNum = 3000;
 
 
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "只展示被引用数量小于该值的资产(防止卡顿)"))
-	int32 OnlyShowLessReferenceNum = 5;
+	int32 OnlyShowLessReferenceNum = 0;
 
-	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "白名单资产(不会被删除)"))
+	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "搜索的起始路径", Tooltip = "都以 /Game 开始"))
 	FString SearchStartContent = TEXT("/Game");
 
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "弹出确定框", Tooltip = "弹出删除确认框"))
@@ -46,7 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "自动删除次数", Tooltip = "资产链式引用，需要频繁删除时使用", ClampMin=1))
 	int FoolDeleteTimes = 1;
 
-	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "白名单资产(不会被删除)"))
+	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "白名单资产(不会被删除)", Tooltip="直接填入资产名字，与所填名字相同的资产都不会被删除"))
 	TArray<FString> WhiteAssetName;
 
 public:

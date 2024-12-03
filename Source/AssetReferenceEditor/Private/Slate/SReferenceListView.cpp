@@ -246,6 +246,7 @@ void SReferenceListView::SortAssetByType()
 	});
 }
 
+// 返回 true 表示不做后续检索逻辑
 inline bool SReferenceListView::CheckSearchAsset(const FAssetData& AssetData)
 {
 	auto Setting = UAssetReferenceDeleteSettings::GetSettings();
@@ -263,7 +264,10 @@ inline bool SReferenceListView::CheckSearchAsset(const FAssetData& AssetData)
 	bool bIsBP = AssetData.AssetClassPath.GetAssetName().ToString().ToLower().Contains(TEXT("blueprint"));
 	bIsBP = Setting->bSkipBlueprint && bIsBP;
 
-	return bIsLevel || bIsDT || bIsBP;
+	// 资产白名单
+	bool bWhiteAsset = Setting->WhiteAssetName.Contains(AssetData.AssetName.ToString());
+
+	return bIsLevel || bIsDT || bIsBP || bWhiteAsset;
 }
 
 TArray<FAssetData> SReferenceListView::GetAllAssets()
