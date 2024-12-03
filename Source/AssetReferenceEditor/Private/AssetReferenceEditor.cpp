@@ -55,12 +55,6 @@ void FAssetReferenceEditorModule::ShutdownModule()
 
 TSharedRef<SDockTab> FAssetReferenceEditorModule::OnSpawnPluginTab(const FSpawnTabArgs& SpawnTabArgs)
 {
-	FText WidgetText = FText::Format(
-		LOCTEXT("WindowWidgetText", "Add code to {0} in {1} to override this window's contents"),
-		FText::FromString(TEXT("FAssetReferenceEditorModule::OnSpawnPluginTab")),
-		FText::FromString(TEXT("AssetReferenceEditor.cpp"))
-		);
-
 	return SNew(SDockTab)
 		.TabRole(ETabRole::NomadTab)
 		[
