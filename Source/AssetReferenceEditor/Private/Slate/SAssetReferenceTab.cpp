@@ -101,6 +101,9 @@ FReply SAssetReferenceTab::DeleteButtonClicked()
 	{
 		return FReply::Handled();
 	}
+
+	auto Setting = UAssetReferenceDeleteSettings::GetSettings();
+
 	auto AllShowAssets = ReferenceListView->GetAllAssetReferenceInfos();
 	auto Settings = UAssetReferenceDeleteSettings::GetSettings();
 
@@ -108,6 +111,19 @@ FReply SAssetReferenceTab::DeleteButtonClicked()
 	SlowTask.MakeDialog();
 
 	SlowTask.EnterProgressFrame(1, FText::FromString(TEXT("获取所有资产")));
+
+	if (Setting->bConfirmDelete)
+	{
+		TArray<FAssetData> AssetToDeletes;
+		for (const auto& Item : AllShowAssets)
+		{
+			AssetToDeletes.Add(Item->AssetData);
+		}
+		ObjectTools::DeleteAssets(AssetToDeletes, true);
+
+		ReferenceListView->Refresh();
+		return FReply::Handled();
+	}
 
 	for (const auto& AssetInfo : AllShowAssets)
 	{

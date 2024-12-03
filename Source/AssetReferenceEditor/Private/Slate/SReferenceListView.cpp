@@ -260,7 +260,7 @@ inline bool SReferenceListView::CheckSearchAsset(const FAssetData& AssetData)
 	bIsDT = Setting->bSkipDataTable && bIsDT;
 
 	// 不检查 Blueprint
-	bool bIsBP = AssetData.AssetClassPath.GetAssetName().ToString().Equals(TEXT("Blueprint"));
+	bool bIsBP = AssetData.AssetClassPath.GetAssetName().ToString().ToLower().Contains(TEXT("blueprint"));
 	bIsBP = Setting->bSkipBlueprint && bIsBP;
 
 	return bIsLevel || bIsDT || bIsBP;

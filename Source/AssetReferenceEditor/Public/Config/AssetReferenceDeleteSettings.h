@@ -40,6 +40,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "白名单资产(不会被删除)"))
 	FString SearchStartContent = TEXT("/Game");
 
+	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "弹出确定框", Tooltip = "确认框一次性删除 会更快"))
+	bool bConfirmDelete = true;
+
 	UPROPERTY(EditAnywhere, Category = "DeleteSettings", Meta = (DisplayName = "白名单资产(不会被删除)"))
 	TArray<FString> WhiteAssetName;
 
