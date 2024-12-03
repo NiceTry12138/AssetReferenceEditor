@@ -103,6 +103,22 @@ FReply SAssetReferenceTab::DeleteButtonClicked()
 	}
 
 	auto Setting = UAssetReferenceDeleteSettings::GetSettings();
+	for (int Index = 0; Index < Setting->FoolDeleteTimes; ++Index)
+	{
+		DeleteImpl();
+	}
+
+	return FReply::Handled();
+}
+
+FReply SAssetReferenceTab::FileterButtonClicked()
+{
+	return FReply::Handled();
+}
+
+void SAssetReferenceTab::DeleteImpl()
+{
+	auto Setting = UAssetReferenceDeleteSettings::GetSettings();
 
 	auto AllShowAssets = ReferenceListView->GetAllAssetReferenceInfos();
 	auto Settings = UAssetReferenceDeleteSettings::GetSettings();
@@ -122,7 +138,7 @@ FReply SAssetReferenceTab::DeleteButtonClicked()
 		ObjectTools::DeleteAssets(AssetToDeletes, true);
 
 		ReferenceListView->Refresh();
-		return FReply::Handled();
+		return ;
 	}
 
 	for (const auto& AssetInfo : AllShowAssets)
@@ -140,11 +156,4 @@ FReply SAssetReferenceTab::DeleteButtonClicked()
 	}
 
 	ReferenceListView->Refresh();
-
-	return FReply::Handled();
-}
-
-FReply SAssetReferenceTab::FileterButtonClicked()
-{
-	return FReply::Handled();
 }

@@ -26,7 +26,7 @@ protected:
 	FReply FileterButtonClicked();
 
 protected:
-
+	void DeleteImpl();
 
 protected:
 	TSharedPtr<SReferenceListView> ReferenceListView;
