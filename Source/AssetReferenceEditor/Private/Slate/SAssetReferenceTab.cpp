@@ -133,6 +133,10 @@ void SAssetReferenceTab::DeleteImpl()
 		TArray<FAssetData> AssetToDeletes;
 		for (const auto& Item : AllShowAssets)
 		{
+			if (Item->ReferencersNum > 0)
+			{
+				continue;
+			}
 			AssetToDeletes.Add(Item->AssetData);
 		}
 		ObjectTools::DeleteAssets(AssetToDeletes, true);
